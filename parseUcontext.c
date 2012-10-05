@@ -30,7 +30,7 @@ int main(int argc, char **argv)
   printf("A ucontext_t is %d bytes\n", sizeof(ucontext_t));
   // TBD: Fill in ucontext size above. Hint: use sizeof().
 
-  unsigned int anotherSample = probeUCStack("Dummy argument.");
+  unsigned int anotherSample = probeUCStack(&mycontext);
 
   /*
    * Now, look inside of the ucontext you just saved.
@@ -98,13 +98,12 @@ int main(int argc, char **argv)
  * uc_stack.ss_sp saved in main().
  */
 unsigned int
-probeUCStack(const char *str)
+probeUCStack(*mycontext) /* probably have a pointer error here */
 {
-  ucontext_t mycontext;
   int err;
-
-  err = getcontext(&mycontext);
+  
+  err = getcontext(*mycontext);
   assert(!err);
-  return (unsigned int)mycontext.uc_stack.ss_sp;
+  return (unsigned int)*mycontext.uc_stack.ss_sp;
 }
 
