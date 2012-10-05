@@ -10,7 +10,7 @@
 
 #define SOL 99
 
-unsigned int probeUCStack(const char *string);
+unsigned int probeUCStack(ucontext_t *mycontext);
 
 int main(int argc, char **argv)
 {
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   err = getcontext(&mycontext);
   assert(!err);
 
-  printf("A ucontext_t is %d bytes\n", sizeof(ucontext_t));
+  printf("A ucontext_t is %d bytes\n", (int)sizeof(ucontext_t));
   // TBD: Fill in ucontext size above. Hint: use sizeof().
 
   unsigned int anotherSample = probeUCStack(&mycontext);
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
   /*
    * First, think about program counters (called eip in x86)
    */
-  printf("The memory address of the function main() is 0x%x\n", (unsigned int)&main);
+  printf("The memory address of the function main() is 0x%x\n", (unsigned int)&main); /* once we're on the right architecture, make sure to cast this properly. It might have to be long unsigned int. */
   printf("The memory address of the program counter (EIP) saved in mycontext is 0x%x\n", (unsigned int)mycontext.uc_mcontext.gregs[REG_EIP]);
 
   /*
@@ -71,14 +71,14 @@ int main(int argc, char **argv)
    */
   printf("The memory address of the local variable err is 0x%8x\n", (unsigned int)(mycontext.uc_mcontext.gregs[REG_EBP] - 4 - sizeof(ucontext_t)));
   printf("The memory address of the argument argc is 0x%8x\n", (unsigned int)(mycontext.uc_mcontext.gregs[REG_EBP] + 8));
-  printf("The value of ucontext_t.uc_stack.ss_sp is 0x%08x\n", (unsigned int)(mycontext.uc_stack.ss_sp));
+  printf("The value of ucontext_t.uc_stack.ss_sp is 0x%08x\n", (unsigned int)(mycontext.uc_stack.ss_sp)); /* change to appropriate casting if warnings persist on correct architecture */
   printf("The value of ucontext_t.uc_stack.ss_size is 0x%08x\n", (unsigned int)(mycontext.uc_stack.ss_size));
   printf("The value of anotherSample is 0x%08x\n", anotherSample);
   printf("The stack pointer stored as one of the registers (ESP) in uc_mcontext is 0x%08x\n", (unsigned int)mycontext.uc_mcontext.gregs[REG_ESP]);
   printf("The stack pointer stored as another one of the `registers` (UESP) in uc_mcontext is 0x%08x\n", (unsigned int)mycontext.uc_mcontext.gregs[REG_UESP]);
 
 
-  printf("The number of bytes pushed onto the stack between argc and err was 0x%x\n", 12 + sizeof(ucontext_t));
+  printf("The number of bytes pushed onto the stack between argc and err was 0x%x\n", (unsigned int)(12 + sizeof(ucontext_t)));
   /* Which is the right one to use? */
   printf("The number of bytes pushed onto the stack between err and when the stack was saved to mycontext was 0x%x\n",
          (unsigned int)(mycontext.uc_mcontext.gregs[REG_ESP] - (mycontext.uc_mcontext.gregs[REG_ESP] - 4 - sizeof(ucontext_t))));
@@ -98,12 +98,12 @@ int main(int argc, char **argv)
  * uc_stack.ss_sp saved in main().
  */
 unsigned int
-probeUCStack(*mycontext) /* probably have a pointer error here */
+probeUCStack(ucontext_t *mycontext)
 {
   int err;
   
-  err = getcontext(*mycontext);
+  err = getcontext(mycontext); /*pass pointer of mycontext to function */
   assert(!err);
-  return (unsigned int)*mycontext.uc_stack.ss_sp;
+  return (unsigned int)mycontext->uc_stack.ss_sp; /* be sure to use proper casting on the final machine. */
 }
 
