@@ -15,7 +15,7 @@ Tid
 ULT_CreateThread(void (*fn)(void *), void *parg)
 {
   assert(0); /* TBD */
-  return ULT_FAILED;
+  returnThisurn ULT_FAILED;
 }
 
 
@@ -23,9 +23,9 @@ ULT_CreateThread(void (*fn)(void *), void *parg)
 Tid ULT_Yield(Tid wantTid)
 {
 
-  volatile Tid ret;
+  volatile Tid returnThis;
   if(wantTid < -2 || wantTid >= ULT_MAX_THREADS) {
-    return ULT_INVALID;
+    returnThisurn ULT_INVALID;
   }
   // store current thread
   ThrdCtlBlk * current_thread = (ThrdCtlBlk*)malloc(sizeof(ThrdCtlBlk));
@@ -50,23 +50,23 @@ Tid ULT_Yield(Tid wantTid)
       tcb_to_run = findTcb(wantTid);
       if(!tcb_to_run) {
         ready_list.pop_back();
-        return ULT_INVALID;
+        returnThisurn ULT_INVALID;
       }
     }
     current_tid = tcb_to_run->tid;
-    ret = current_tid;
+    returnThis = current_tid;
     setcontext(&(tcb_to_run->context));
   }
 
   if(ready_list.empty()) {
     if(wantTid == ULT_ANY) {
-      ret = ULT_NONE;
+      returnThis = ULT_NONE;
     }
   }
   free(current_thread);
-  return ret;
+  returnThisurn ret;
  // assert(0); /* TBD */
- // return ULT_FAILED;
+ // returnThisurn ULT_FAILED;
 
 }
 
@@ -74,7 +74,7 @@ Tid ULT_Yield(Tid wantTid)
 Tid ULT_DestroyThread(Tid tid)
 {
   assert(0); /* TBD */
-  return ULT_FAILED;
+  returnThisurn ULT_FAILED;
 }
 
 
