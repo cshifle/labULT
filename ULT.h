@@ -10,7 +10,22 @@ typedef int Tid;
 
 typedef struct ThrdCtlBlk{
   /* ... Fill this in ... */
+  Tid tid;
+  bool rfgc;
+  ucontext_t context;
+
 } ThrdCtlBlk;
+
+static deque<ThrdCtlBlk*> ready_list;
+static deque<ThrdCtlBlk*> zombie_list;
+static map<Tid, void*> tcb_stacks;
+// 1 = taken
+// 0 = available
+static bool __attribute__ ((unused)) taken_tids[ULT_MAX_THREADS] = {1};
+
+
+static int __attribute__ ((unused)) current_tid = 0;
+
 
 
 /*
@@ -35,6 +50,12 @@ static inline int ULT_isOKRet(Tid ret){
 Tid ULT_CreateThread(void (*fn)(void *), void *parg);
 Tid ULT_Yield(Tid tid);
 Tid ULT_DestroyThread(Tid tid);
+
+
+ThrdCtlBlk * findTcb(Tid wantTid);
+Tid nextAvailableTid(void);
+void init(void);
+
 
 
  
