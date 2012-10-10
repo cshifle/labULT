@@ -1,7 +1,11 @@
 #ifndef _ULT_H_
 #define _ULT_H_
 #include <ucontext.h>
+#include <deque>
+#include <map>
+#include <stdbool.h>
 
+//using namespace std;
 typedef int Tid;
 #define ULT_MAX_THREADS 1024
 #define ULT_MIN_STACK 32768
@@ -9,12 +13,12 @@ typedef int Tid;
 
 
 typedef struct ThrdCtlBlk{
-  /* ... Fill this in ... */
   Tid tid;
   bool rfgc;
   ucontext_t context;
 
 } ThrdCtlBlk;
+
 
 static deque<ThrdCtlBlk*> ready_list;
 static deque<ThrdCtlBlk*> zombie_list;

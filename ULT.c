@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <cstdlib>
 
 /* We want the extra information from these definitions */
 #ifndef __USE_GNU
@@ -15,7 +16,7 @@ Tid
 ULT_CreateThread(void (*fn)(void *), void *parg)
 {
   assert(0); /* TBD */
-  returnThisurn ULT_FAILED;
+  return ULT_FAILED;
 }
 
 
@@ -25,7 +26,7 @@ Tid ULT_Yield(Tid wantTid)
 
   volatile Tid returnThis;
   if(wantTid < -2 || wantTid >= ULT_MAX_THREADS) {
-    returnThisurn ULT_INVALID;
+    return ULT_INVALID;
   }
   // store current thread
   ThrdCtlBlk * current_thread = (ThrdCtlBlk*)malloc(sizeof(ThrdCtlBlk));
@@ -50,7 +51,7 @@ Tid ULT_Yield(Tid wantTid)
       tcb_to_run = findTcb(wantTid);
       if(!tcb_to_run) {
         ready_list.pop_back();
-        returnThisurn ULT_INVALID;
+        return ULT_INVALID;
       }
     }
     current_tid = tcb_to_run->tid;
@@ -64,9 +65,9 @@ Tid ULT_Yield(Tid wantTid)
     }
   }
   free(current_thread);
-  returnThisurn ret;
+  return ret;
  // assert(0); /* TBD */
- // returnThisurn ULT_FAILED;
+ // return ULT_FAILED;
 
 }
 
@@ -74,7 +75,7 @@ Tid ULT_Yield(Tid wantTid)
 Tid ULT_DestroyThread(Tid tid)
 {
   assert(0); /* TBD */
-  returnThisurn ULT_FAILED;
+  return ULT_FAILED;
 }
 
 
