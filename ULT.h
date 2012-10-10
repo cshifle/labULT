@@ -1,8 +1,8 @@
 #ifndef _ULT_H_
 #define _ULT_H_
 #include <ucontext.h>
-#include <deque>
-#include <map>
+//#include "deque"
+//#include "map"
 #include <stdbool.h>
 
 //using namespace std;
@@ -20,9 +20,9 @@ typedef struct ThrdCtlBlk{
 } ThrdCtlBlk;
 
 
-static deque<ThrdCtlBlk*> ready_list;
-static deque<ThrdCtlBlk*> zombie_list;
-static map<Tid, void*> tcb_stacks;
+//static deque<ThrdCtlBlk*> ready_list;
+//static deque<ThrdCtlBlk*> zombie_list;
+//static map<Tid, void*> tcb_stacks;
 // 1 = taken
 // 0 = available
 static bool __attribute__ ((unused)) taken_tids[ULT_MAX_THREADS] = {1};

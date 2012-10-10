@@ -1,5 +1,5 @@
 #include <assert.h>
-#include <cstdlib>
+#include <stdlib.h>
 
 /* We want the extra information from these definitions */
 #ifndef __USE_GNU
@@ -65,7 +65,7 @@ Tid ULT_Yield(Tid wantTid)
     }
   }
   free(current_thread);
-  return ret;
+  return returnThis;
  // assert(0); /* TBD */
  // return ULT_FAILED;
 
