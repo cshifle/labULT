@@ -8,62 +8,62 @@ typedef struct node {
 
 } node;
 
-int ipop(struct node ** ppnodeHead, int *piPopped)
+
+void remove_first(struct node ** ppnodeHead)
 {
-    /* pops the first value off the stack */
-    
-    if(*ppnodeHead != NULL) { //if there are elements on the stack...
+    if(*ppnodeHead != NULL) { //if there are elements in the list...
+	struct node *first = *ppnodeHead; //grab first element
+	if(first->pnext != NULL) {
+		*ppnodeHead = first->pnext; //make second element new lead
+        } else {
+		*ppnodeHead = NULL;
+        }
+	free(first); //delete first element
+    }
+}
+
+void remove_last(struct node ** ppnodeHead)
+{
+    if(*ppnodeHead != NULL) { //if there are elements in the list...
         struct node *temp = *ppnodeHead;
         struct node *cur;
-        if(temp->pnext != NULL) { //if there is more than one element on the stack
+        if(temp->pnext != NULL) { //if there is more than one element in the list
             cur = temp->pnext; //use two pointers to find the end
             while(cur->pnext != NULL) { //step to the end
                 temp = cur;
                 cur = cur->pnext;
             }
-            *piPopped = cur->idata; //obtain the last element's value
             free(cur); //delete the element
             temp->pnext = NULL; //reassign preceding node link.
-        } else { //if there is one element on the stack
-            *piPopped = temp->idata; //obtain its value
+        } else { //if there is one element in the list
             *ppnodeHead = NULL; //delete the element
         }
-        
-        return 0;
-    } else {
-        return 1;
     }
 }
 
-
-
-
-void pop_back(struct node ** ppnodeHead)
+void add_first(struct node ** ppnodeHead, int iarg)
 {
-    /* pops and then prints the value on top of the stack */
-	int iPopped, iResult;
-	iResult = ipop(ppnodeHead, &iPopped);
-	if (iResult == 1)
-	{
-		printf("NULL\n");
+	struct node *first = (node*)malloc(sizeof(struct node)); //create a new element
+	first->idata = iarg;
+
+	struct node *cur;
+	if(*ppnodeHead != NULL) { //if there are elements in the list
+		first->pnext = *ppnodeHead; //insert the new element at the beginning
+	} else {
+		first->pnext = NULL; //or just drop it in place
 	}
-	else
-	{
-		printf("%d\n", iPopped);
-	}
+	*ppnodeHead = first; //then set the new element as first.
 }
 
-void push_back(struct node ** ppnodeHead, int iarg)
+void add_last(struct node ** ppnodeHead, int iarg)
 {
-    /* push value iarg onto stack */
-    
     struct node *cur;
-    if(*ppnodeHead == NULL) { //if the is completely empty,
+    if(*ppnodeHead == NULL) { //if the list is completely empty,
         *ppnodeHead = (node*)malloc(sizeof(struct node)); //create a starting element
         cur = *ppnodeHead;
         cur->idata = iarg; //give the starting element a value and a null pointer.
         cur->pnext = NULL;
-    } else { //if there are elements on the stack
+    } else { //if there are elements in the lsit
         cur = *ppnodeHead;
         while(cur->pnext != NULL) { //loop through to the end
             cur = cur->pnext;
@@ -74,8 +74,6 @@ void push_back(struct node ** ppnodeHead, int iarg)
         cur->pnext = NULL; //set new last element's pointer to NULL.
     }
 }
-
-
 
 
 
