@@ -35,22 +35,22 @@ Tid ULT_Yield(Tid wantTid)
   getcontext(&(current_thread->context));
   if(!current_thread->rfgc) {
     current_thread->rfgc = true;
-    ready_list.push_back(current_thread);
+    push_back(&ready_list, current_thread);
 
     // pick the next tcb to run
     ThrdCtlBlk * tcb_to_run;
     if(wantTid == ULT_ANY) {
-      tcb_to_run = ready_list.front();
-      ready_list.pop_front();
+      tcb_to_run = front(&ready_list);
+      pop_front(&ready_list);
     }
     else if(wantTid == ULT_SELF) {
-      tcb_to_run = ready_list.back();
-      ready_list.pop_back();
+      tcb_to_run = back(&ready_list);
+      pop_back(&ready_list);
     }
     else {
-      tcb_to_run = findTcb(wantTid);
+      tcb_to_run = findTcb(&ready_list, wantTid);
       if(!tcb_to_run) {
-        ready_list.pop_back();
+        pop_back(&ready_list);
         return ULT_INVALID;
       }
     }
@@ -59,7 +59,7 @@ Tid ULT_Yield(Tid wantTid)
     setcontext(&(tcb_to_run->context));
   }
 
-  if(ready_list.empty()) {
+  if(is_empty(&ready_list)) {
     if(wantTid == ULT_ANY) {
       returnThis = ULT_NONE;
     }
