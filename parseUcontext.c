@@ -10,6 +10,13 @@
 
 #define SOL 99
 
+#ifndef REG_EIP
+#define REG_EIP 0
+#define REG_EBP 0
+#define REG_ESP 0
+#define REG_UESP 0
+#endif
+
 unsigned int probeUCStack(ucontext_t *mycontext);
 
 int main(int argc, char **argv)

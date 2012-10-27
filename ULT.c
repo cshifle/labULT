@@ -79,5 +79,7 @@ Tid ULT_DestroyThread(Tid tid)
 }
 
 
-
+int main() {
+	return 0;
+}
 

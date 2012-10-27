@@ -68,7 +68,6 @@ void push_front(struct node ** ppnodeHead, ThrdCtlBlk* iarg) //push a new elemen
 	struct node *first = (node*)malloc(sizeof(struct node)); //create a new element
 	first->idata = iarg;
 
-	struct node *cur;
 	if(*ppnodeHead != NULL) { //if there are elements in the list
 		first->pnext = *ppnodeHead; //insert the new element at the beginning
 	} else {
