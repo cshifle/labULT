@@ -17,7 +17,7 @@
 #define REG_UESP 0
 #endif
 
-unsigned int probeUCStack(ucontext_t *mycontext);
+long unsigned int probeUCStack(ucontext_t *mycontext);
 
 int main(int argc, char **argv)
 {
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
   /*
    * First, think about program counters (called eip in x86)
    */
-  printf("The memory address of the function main() is 0x%x\n", (unsigned int)&main); /* once we're on the right architecture, make sure to cast this properly. It might have to be long unsigned int. */
+  printf("The memory address of the function main() is 0x%lx\n", (long unsigned int)&main); /* once we're on the right architecture, make sure to cast this properly. It might have to be long unsigned int. */
   printf("The memory address of the program counter (EIP) saved in mycontext is 0x%x\n", (unsigned int)mycontext.uc_mcontext.gregs[REG_EIP]);
 
   /*
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
    */
   printf("The memory address of the local variable err is 0x%8x\n", (unsigned int)(mycontext.uc_mcontext.gregs[REG_EBP] - 4 - sizeof(ucontext_t)));
   printf("The memory address of the argument argc is 0x%8x\n", (unsigned int)(mycontext.uc_mcontext.gregs[REG_EBP] + 8));
-  printf("The value of ucontext_t.uc_stack.ss_sp is 0x%08x\n", (unsigned int)(mycontext.uc_stack.ss_sp)); /* change to appropriate casting if warnings persist on correct architecture */
+  printf("The value of ucontext_t.uc_stack.ss_sp is 0x%08lx\n", (long unsigned int)(mycontext.uc_stack.ss_sp)); /* change to appropriate casting if warnings persist on correct architecture */
   printf("The value of ucontext_t.uc_stack.ss_size is 0x%08x\n", (unsigned int)(mycontext.uc_stack.ss_size));
   printf("The value of anotherSample is 0x%08x\n", anotherSample);
   printf("The stack pointer stored as one of the registers (ESP) in uc_mcontext is 0x%08x\n", (unsigned int)mycontext.uc_mcontext.gregs[REG_ESP]);
@@ -104,13 +104,13 @@ int main(int argc, char **argv)
  * One thing to do is to compare it to the
  * uc_stack.ss_sp saved in main().
  */
-unsigned int
+long unsigned int
 probeUCStack(ucontext_t *mycontext)
 {
   int err;
   
   err = getcontext(mycontext); /*pass pointer of mycontext to function */
   assert(!err);
-  return (unsigned int)mycontext->uc_stack.ss_sp; /* be sure to use proper casting on the final machine. */
+  return (long unsigned int)mycontext->uc_stack.ss_sp; /* be sure to use proper casting on the final machine. */
 }
 
