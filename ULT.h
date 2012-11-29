@@ -6,9 +6,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h> //may not be necessary
-
+//#include <stdio.h>
 //using namespace std;
-typedef int Tid;
+typedef long int Tid;
 #define ULT_MAX_THREADS 1024
 #define ULT_MIN_STACK 32768
 

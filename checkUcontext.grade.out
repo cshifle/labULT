@@ -1,0 +1,14 @@
+WORDSIZE 32
+NGREG 19
+A ucontext_t is 348 bytes
+The memory address of the function main() is 0x8048464
+The memory address of the program counter (EIP) saved in mycontext is 0x8048619
+The memory address of the local variable err is 0xbf8360c8
+The memory address of the argument argc is 0xbf836230
+The value of ucontext_t.uc_stack.ss_sp is 0x00000000
+The value of ucontext_t.uc_stack.ss_size is 0x00000000
+The value of anotherSample is 0x00000000
+The stack pointer stored as one of the registers (ESP) in uc_mcontext is 0xbf836200
+The stack pointer stored as another one of the `registers` (UESP) in uc_mcontext is 0x00000000
+The number of bytes pushed onto the stack between argc and err was 0x168
+The number of bytes pushed onto the stack between err and when the stack was saved to mycontext was 0x160

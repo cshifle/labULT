@@ -1,12 +1,11 @@
 #include <assert.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 /* We want the extra information from these definitions */
 #ifndef __USE_GNU
 #define __USE_GNU
 #endif /* __USE_GNU */
 #include <ucontext.h>
-
 #include "ULT.h"
 
 
@@ -101,10 +100,13 @@ ThrdCtlBlk* back(struct node** ppnodeHead) {
 
 ThrdCtlBlk* findTcb(struct node** ppnodeHead, Tid wantTid) {
         struct node *cur = *ppnodeHead;
-        while(cur->idata->tid != wantTid) { //loop through until wantTid is found
+        while(cur != NULL ){
+		if(cur->idata->tid != wantTid) { //loop through until wantTid is found
                 cur = cur->pnext;
-        }
-        return cur->idata; //breaks if it doesn't find wantTid
+        	}
+		else{return cur->idata;}
+	}
+        return 0; //breaks if it doesn't find wantTid
 }
 
 
@@ -127,7 +129,6 @@ ULT_CreateThread(void (*fn)(void *), void *parg)
 
 Tid ULT_Yield(Tid wantTid)
 {
-
   volatile Tid returnThis;
   if(wantTid < -2 || wantTid >= ULT_MAX_THREADS) {
     return ULT_INVALID;
@@ -140,12 +141,13 @@ Tid ULT_Yield(Tid wantTid)
   if(!current_thread->rfgc) {
     current_thread->rfgc = true;
     push_back(&ready_list, current_thread);
-
     // pick the next tcb to run
     ThrdCtlBlk * tcb_to_run;
     if(wantTid == ULT_ANY) {
-      tcb_to_run = front(&ready_list);
-      pop_front(&ready_list);
+      return ULT_NONE;
+      
+      //tcb_to_run = front(&ready_list);
+      //pop_front(&ready_list);
     }
     else if(wantTid == ULT_SELF) {
       tcb_to_run = back(&ready_list);
@@ -154,6 +156,8 @@ Tid ULT_Yield(Tid wantTid)
     else {
       tcb_to_run = findTcb(&ready_list, wantTid);
       if(!tcb_to_run) {
+
+	return ULT_INVALID;
         pop_back(&ready_list);
         return ULT_INVALID;
       }
